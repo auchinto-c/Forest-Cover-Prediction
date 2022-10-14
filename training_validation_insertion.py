@@ -1,6 +1,6 @@
 from datetime import datetime
 from Training_Raw_data_validation.rawValidation import Raw_Data_Validation
-from DataTypeValidation_Insertion_Training.DataTypeValidation import dbOperation
+from DataTypeValidation_Insertion_Training.DataTypeValidation import dbOperations
 from DataTransform_Training.DataTransformation import dataTransform
 from application_logging import logger
 
@@ -9,7 +9,7 @@ class train_validation:
     def __init__(self, path) -> None:
         self.raw_data = Raw_Data_Validation(path)
         self.dataTransform = dataTransform()
-        self.dbOperation = dbOperation()
+        self.dbOperation = dbOperations()
         self.file_object = open('Training_Logs/Training_Main_Log.txt', 'a+')
         self.log_writer = logger.App_Logger()
 
