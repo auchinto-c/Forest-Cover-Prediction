@@ -4,11 +4,11 @@ from flask import Response
 import os
 from flask_cors import CORS, cross_origin
 
+from predict_from_model import prediction
 from prediction_validation_insertion import pred_validation
 from training_model import train_model
 from training_validation_insertion import train_validation
-import flask_monitoring_dashboard as dashboard
-from predict_from_model import prediction
+import flask_monitoringdashboard as dashboard
 
 os.putenv('LANG', 'en_US.UTF-8')
 os.putenv('LC_ALL', 'en_US.UTF-8')
@@ -25,7 +25,34 @@ def home():
 @app.route('/predict', method=['POST'])
 @cross_origin()
 def predictRouteClient():
-    return
+    try:
+        if request.json is not None:
+            path = request.json['filepath']
+
+            pred_val = pred_validation(path) # Object Initialization
+            pred_val.prediction_validation() # Calling the prediction_validation function
+
+            pred = prediction(path) # Object Initialization
+            path = pred.predictionFromModel() # Predicting for dataset present in database
+
+            return Response(f'Prediction File created at {path}')
+        elif request.form is not None:
+            path = request.form['filepath']
+
+            pred_val = pred_validation(path) # Object Initialization
+            pred_val.prediction_validation() # Calling the prediction_validation function
+
+            pred = prediction(path) # Object Initialization
+            path = pred.predictionFromModel() # Predicting for dataset present in database
+
+            return Response(f'Prediction File created at {path}')
+
+    except ValueError:
+        return Response(f'Error Occured:: {ValueError}')
+    except KeyError:
+        return Response(f'Error Occured:: {KeyError}')
+    except Exception as e:
+        return Response(f'Error Occured:: {e}')
 
 @app.route('/train', methods=['POST'])
 @cross_origin()
